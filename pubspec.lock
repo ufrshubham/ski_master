@@ -76,10 +76,11 @@ packages:
   flame:
     dependency: "direct main"
     description:
-      name: flame
-      sha256: f1ed45b49db36f6650882900f3216516d5c2628400bad8b4e92d83c116d79b12
-      url: "https://pub.dev"
-    source: hosted
+      path: "packages/flame"
+      ref: HEAD
+      resolved-ref: "5fa4e09f7c464ce2f676df81049a95dad46bf2bd"
+      url: "https://github.com/flame-engine/flame.git"
+    source: git
     version: "1.9.1"
   flame_tiled:
     dependency: "direct main"
