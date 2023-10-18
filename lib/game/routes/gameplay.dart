@@ -25,8 +25,21 @@ class Gameplay extends Component with KeyboardHandler {
     // ignore: avoid_print
     print('Current Level: $currentLevel');
 
-    final map = await TiledComponent.load('sampleMap.tmx', Vector2.all(64));
-    await add(map);
+    final map = await TiledComponent.load('Level1.tmx', Vector2.all(16));
+
+    final world = World(children: [map]);
+    await add(world);
+
+    final camera = CameraComponent.withFixedResolution(
+      width: 320,
+      height: 180,
+      world: world,
+    );
+    await add(camera);
+
+    camera.moveTo(
+      Vector2(map.size.x * 0.5, camera.viewport.virtualSize.y * 0.5),
+    );
   }
 
   @override

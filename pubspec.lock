@@ -76,20 +76,19 @@ packages:
   flame:
     dependency: "direct main"
     description:
-      path: "packages/flame"
-      ref: HEAD
-      resolved-ref: "5fa4e09f7c464ce2f676df81049a95dad46bf2bd"
-      url: "https://github.com/flame-engine/flame.git"
-    source: git
-    version: "1.9.1"
+      name: flame
+      sha256: "042533edc7ded96c2a439b2eae1a905f2611447d0d106b33686b841371c8d8c5"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.10.0"
   flame_tiled:
     dependency: "direct main"
     description:
       name: flame_tiled
-      sha256: c3e651e9e3b9c7dae32fbe9e696076bb7532efb42bdffcb8f641e834da84be0b
+      sha256: "1d40c455612ed5a0b471bff5e86f06964f9be3039a8b69000359b4a27184d39e"
       url: "https://pub.dev"
     source: hosted
-    version: "1.14.1"
+    version: "1.15.0"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -275,4 +274,4 @@ packages:
     version: "6.3.0"
 sdks:
   dart: ">=3.1.2 <4.0.0"
-  flutter: ">=3.3.0"
+  flutter: ">=3.13.0"
