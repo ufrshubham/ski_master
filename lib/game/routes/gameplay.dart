@@ -3,22 +3,32 @@ import 'dart:async';
 import 'package:flame/components.dart';
 import 'package:flame_tiled/flame_tiled.dart';
 import 'package:flutter/services.dart';
+import 'package:ski_master/game/input.dart';
+import 'package:ski_master/game/player.dart';
 
-class Gameplay extends Component with KeyboardHandler {
+class Gameplay extends Component {
   Gameplay(
     this.currentLevel, {
     super.key,
-    this.onPausePressed,
-    this.onLevelCompleted,
-    this.onGameOver,
+    required this.onPausePressed,
+    required this.onLevelCompleted,
+    required this.onGameOver,
   });
 
   static const id = 'Gameplay';
 
   final int currentLevel;
-  final VoidCallback? onPausePressed;
-  final VoidCallback? onLevelCompleted;
-  final VoidCallback? onGameOver;
+  final VoidCallback onPausePressed;
+  final VoidCallback onLevelCompleted;
+  final VoidCallback onGameOver;
+
+  late final input = Input(
+    keyCallbacks: {
+      LogicalKeyboardKey.keyP: onPausePressed,
+      LogicalKeyboardKey.keyC: onLevelCompleted,
+      LogicalKeyboardKey.keyO: onGameOver,
+    },
+  );
 
   @override
   Future<void> onLoad() async {
@@ -26,8 +36,9 @@ class Gameplay extends Component with KeyboardHandler {
     print('Current Level: $currentLevel');
 
     final map = await TiledComponent.load('Level1.tmx', Vector2.all(16));
+    final player = Player(position: Vector2(map.size.x * 0.5, 8));
 
-    final world = World(children: [map]);
+    final world = World(children: [map, input, player]);
     await add(world);
 
     final camera = CameraComponent.withFixedResolution(
@@ -37,20 +48,6 @@ class Gameplay extends Component with KeyboardHandler {
     );
     await add(camera);
 
-    camera.moveTo(
-      Vector2(map.size.x * 0.5, camera.viewport.virtualSize.y * 0.5),
-    );
-  }
-
-  @override
-  bool onKeyEvent(RawKeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
-    if (keysPressed.contains(LogicalKeyboardKey.keyP)) {
-      onPausePressed?.call();
-    } else if (keysPressed.contains(LogicalKeyboardKey.keyC)) {
-      onLevelCompleted?.call();
-    } else if (keysPressed.contains(LogicalKeyboardKey.keyO)) {
-      onGameOver?.call();
-    }
-    return super.onKeyEvent(event, keysPressed);
+    camera.follow(player);
   }
 }
