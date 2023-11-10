@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="20" height="40" tilewidth="16" tileheight="16" infinite="0" nextlayerid="3" nextobjectid="1">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="20" height="40" tilewidth="16" tileheight="16" infinite="0" nextlayerid="4" nextobjectid="6">
+ <editorsettings>
+  <export target="../assets/tiles/Level1.tmx" format="tmx"/>
+ </editorsettings>
  <tileset firstgid="1" source="tilemap_packed.tsx"/>
  <layer id="1" name="Path" width="20" height="40">
   <data encoding="csv">
@@ -89,4 +92,13 @@
 0,31,0,0,31,0,22,0,0,21,0,48,0,0,0,0,0,0,0,0
 </data>
  </layer>
+ <objectgroup id="3" name="SpawnPoint">
+  <object id="1" name="Player Start" type="Player" x="160" y="16">
+   <point/>
+  </object>
+  <object id="2" type="Snowman" gid="70" x="190" y="160" width="16" height="16"/>
+  <object id="3" type="Snowman" gid="70" x="156" y="308" width="16" height="16"/>
+  <object id="4" type="Snowman" gid="70" x="124" y="408" width="16" height="16"/>
+  <object id="5" type="Snowman" gid="70" x="140" y="574" width="16" height="16"/>
+ </objectgroup>
 </map>

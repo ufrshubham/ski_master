@@ -1,12 +1,14 @@
 import 'dart:async';
 
 import 'package:flame/components.dart';
+import 'package:flame/sprite.dart';
 import 'package:flame_tiled/flame_tiled.dart';
 import 'package:flutter/services.dart';
+import 'package:ski_master/game/actors/snowman.dart';
 import 'package:ski_master/game/input.dart';
-import 'package:ski_master/game/player.dart';
+import 'package:ski_master/game/actors/player.dart';
 
-class Gameplay extends Component {
+class Gameplay extends Component with HasGameReference {
   Gameplay(
     this.currentLevel, {
     super.key,
@@ -36,9 +38,7 @@ class Gameplay extends Component {
     print('Current Level: $currentLevel');
 
     final map = await TiledComponent.load('Level1.tmx', Vector2.all(16));
-    final player = Player(position: Vector2(map.size.x * 0.5, 8));
-
-    final world = World(children: [map, input, player]);
+    final world = World(children: [map, input]);
     await add(world);
 
     final camera = CameraComponent.withFixedResolution(
@@ -48,6 +48,32 @@ class Gameplay extends Component {
     );
     await add(camera);
 
-    camera.follow(player);
+    final tiles = game.images.fromCache('../images/tilemap_packed.png');
+    final spriteSheet = SpriteSheet(image: tiles, srcSize: Vector2.all(16));
+
+    final spawnPointLayer = map.tileMap.getLayer<ObjectGroup>('SpawnPoint');
+    final objects = spawnPointLayer?.objects;
+
+    if (objects != null) {
+      for (final object in objects) {
+        switch (object.class_) {
+          case 'Player':
+            final player = Player(
+              position: Vector2(object.x, object.y),
+              sprite: spriteSheet.getSprite(5, 10),
+            );
+            await world.add(player);
+            camera.follow(player);
+            break;
+          case 'Snowman':
+            final snowman = Snowman(
+              position: Vector2(object.x, object.y),
+              sprite: spriteSheet.getSprite(5, 9),
+            );
+            await world.add(snowman);
+            break;
+        }
+      }
+    }
   }
 }

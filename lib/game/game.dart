@@ -12,7 +12,8 @@ import 'package:ski_master/game/routes/pause_menu.dart';
 import 'package:ski_master/game/routes/retry_menu.dart';
 import 'package:ski_master/game/routes/settings.dart';
 
-class SkiMasterGame extends FlameGame with HasKeyboardHandlerComponents {
+class SkiMasterGame extends FlameGame
+    with HasKeyboardHandlerComponents, HasCollisionDetection {
   final musicValueNotifier = ValueNotifier(true);
   final sfxValueNotifier = ValueNotifier(true);
 
