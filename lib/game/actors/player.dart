@@ -48,4 +48,9 @@ class Player extends PositionComponent
       other.collect();
     }
   }
+
+  void resetTo(Vector2 resetPosition) {
+    position.setFrom(resetPosition);
+    _speed *= 0.5;
+  }
 }
