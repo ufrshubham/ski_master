@@ -129,7 +129,7 @@ class Gameplay extends Component with HasGameReference {
               vertices,
               collisionType: CollisionType.passive,
               isSolid: true,
-            )..debugMode = true;
+            );
 
             hitbox.onCollisionStartCallback = (_, __) => _onTrailEnter();
             hitbox.onCollisionEndCallback = (_) => _onTrailExit();
