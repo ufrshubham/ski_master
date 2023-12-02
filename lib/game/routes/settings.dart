@@ -33,7 +33,7 @@ class Settings extends StatelessWidget {
             ),
             const SizedBox(height: 15),
             SizedBox(
-              width: 150,
+              width: 200,
               child: ValueListenableBuilder<bool>(
                 valueListenable: musicValueListenable,
                 builder: (BuildContext context, bool value, Widget? child) {
@@ -48,7 +48,7 @@ class Settings extends StatelessWidget {
             ),
             const SizedBox(height: 5),
             SizedBox(
-              width: 150,
+              width: 200,
               child: ValueListenableBuilder<bool>(
                 valueListenable: sfxValueListenable,
                 builder: (BuildContext context, bool value, Widget? child) {
