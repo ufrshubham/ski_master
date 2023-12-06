@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
@@ -19,6 +20,7 @@ class Gameplay extends Component with HasGameReference {
   });
 
   static const id = 'Gameplay';
+  static const _timeScaleRate = 1;
 
   final int currentLevel;
   final VoidCallback onPausePressed;
@@ -43,12 +45,14 @@ class Gameplay extends Component with HasGameReference {
   int _nTrailTriggers = 0;
   bool get _isOffTrail => _nTrailTriggers == 0;
 
+  bool _levelCompleted = false;
+
   @override
   Future<void> onLoad() async {
-    // ignore: avoid_print
-    print('Current Level: $currentLevel');
-
-    final map = await TiledComponent.load('Level1.tmx', Vector2.all(16));
+    final map = await TiledComponent.load(
+      'Level$currentLevel.tmx',
+      Vector2.all(16),
+    );
     await _setupWorldAndCamera(map);
     await _handleSpawnPoints(map);
     await _handleTriggers(map);
@@ -56,15 +60,23 @@ class Gameplay extends Component with HasGameReference {
 
   @override
   void update(double dt) {
-    if (_isOffTrail) {
-      _resetTimer.update(dt);
-
-      if (!_resetTimer.isRunning()) {
-        _resetTimer.start();
-      }
+    if (_levelCompleted) {
+      _player.timeScale = lerpDouble(
+        _player.timeScale,
+        0,
+        _timeScaleRate * dt,
+      )!;
     } else {
-      if (_resetTimer.isRunning()) {
-        _resetTimer.stop();
+      if (_isOffTrail) {
+        _resetTimer.update(dt);
+
+        if (!_resetTimer.isRunning()) {
+          _resetTimer.start();
+        }
+      } else {
+        if (_resetTimer.isRunning()) {
+          _resetTimer.stop();
+        }
       }
     }
   }
@@ -136,6 +148,31 @@ class Gameplay extends Component with HasGameReference {
 
             await map.add(hitbox);
             break;
+
+          case 'Checkpoint':
+            final checkpoint = RectangleHitbox(
+              position: Vector2(object.x, object.y),
+              size: Vector2(object.width, object.height),
+              collisionType: CollisionType.passive,
+            );
+
+            checkpoint.onCollisionStartCallback =
+                (_, __) => _onCheckpoint(checkpoint);
+
+            await map.add(checkpoint);
+            break;
+
+          case 'End':
+            final trailEnd = RectangleHitbox(
+              position: Vector2(object.x, object.y),
+              size: Vector2(object.width, object.height),
+              collisionType: CollisionType.passive,
+            );
+
+            trailEnd.onCollisionStartCallback = (_, __) => _onTrailEnd();
+
+            await map.add(trailEnd);
+            break;
         }
       }
     }
@@ -147,6 +184,16 @@ class Gameplay extends Component with HasGameReference {
 
   void _onTrailExit() {
     --_nTrailTriggers;
+  }
+
+  void _onCheckpoint(RectangleHitbox checkpoint) {
+    _lastSafePosition.setFrom(checkpoint.absoluteCenter);
+    checkpoint.removeFromParent();
+  }
+
+  void _onTrailEnd() {
+    _levelCompleted = true;
+    onLevelCompleted.call();
   }
 
   void _resetPlayer() {
