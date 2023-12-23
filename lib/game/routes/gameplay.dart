@@ -3,9 +3,11 @@ import 'dart:ui';
 
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
+import 'package:flame/effects.dart';
 import 'package:flame/sprite.dart';
 import 'package:flame_tiled/flame_tiled.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:ski_master/game/actors/snowman.dart';
 import 'package:ski_master/game/input.dart';
 import 'package:ski_master/game/actors/player.dart';
@@ -41,6 +43,7 @@ class Gameplay extends Component with HasGameReference {
   late final CameraComponent _camera;
   late final Player _player;
   late final Vector2 _lastSafePosition;
+  late final RectangleComponent _fader;
 
   int _nTrailTriggers = 0;
   bool get _isOffTrail => _nTrailTriggers == 0;
@@ -56,6 +59,13 @@ class Gameplay extends Component with HasGameReference {
     await _setupWorldAndCamera(map);
     await _handleSpawnPoints(map);
     await _handleTriggers(map);
+
+    _fader = RectangleComponent(
+      size: _camera.viewport.virtualSize,
+      paint: Paint()..color = game.backgroundColor(),
+      children: [OpacityEffect.fadeOut(LinearEffectController(1.5))],
+    );
+    _camera.viewport.add(_fader);
   }
 
   @override
@@ -67,7 +77,7 @@ class Gameplay extends Component with HasGameReference {
         _timeScaleRate * dt,
       )!;
     } else {
-      if (_isOffTrail) {
+      if (_isOffTrail && input.active) {
         _resetTimer.update(dt);
 
         if (!_resetTimer.isRunning()) {
@@ -162,6 +172,30 @@ class Gameplay extends Component with HasGameReference {
             await map.add(checkpoint);
             break;
 
+          case 'Ramp':
+            final ramp = RectangleHitbox(
+              position: Vector2(object.x, object.y),
+              size: Vector2(object.width, object.height),
+              collisionType: CollisionType.passive,
+            );
+
+            ramp.onCollisionStartCallback = (_, __) => _onRamp();
+
+            await map.add(ramp);
+            break;
+
+          case 'Start':
+            final trailStart = RectangleHitbox(
+              position: Vector2(object.x, object.y),
+              size: Vector2(object.width, object.height),
+              collisionType: CollisionType.passive,
+            );
+
+            trailStart.onCollisionStartCallback = (_, __) => _onTrailStart();
+
+            await map.add(trailStart);
+            break;
+
           case 'End':
             final trailEnd = RectangleHitbox(
               position: Vector2(object.x, object.y),
@@ -191,7 +225,31 @@ class Gameplay extends Component with HasGameReference {
     checkpoint.removeFromParent();
   }
 
+  void _onRamp() {
+    final jumpFactor = _player.jump();
+    final jumpScale = lerpDouble(1, 1.08, jumpFactor)!;
+    final jumpDuration = lerpDouble(0, 0.8, jumpFactor)!;
+
+    _camera.viewfinder.add(
+      ScaleEffect.by(
+        Vector2.all(jumpScale),
+        EffectController(
+          duration: jumpDuration,
+          alternate: true,
+          curve: Curves.easeInOut,
+        ),
+      ),
+    );
+  }
+
+  void _onTrailStart() {
+    input.active = true;
+    _lastSafePosition.setFrom(_player.position);
+  }
+
   void _onTrailEnd() {
+    _fader.add(OpacityEffect.fadeIn(LinearEffectController(1.5)));
+    input.active = false;
     _levelCompleted = true;
     onLevelCompleted.call();
   }

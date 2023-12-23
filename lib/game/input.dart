@@ -15,6 +15,7 @@ class Input extends Component with KeyboardHandler, HasGameReference {
   static const _sensitivity = 2.0;
 
   var hAxis = 0.0;
+  bool active = false;
 
   final Map<LogicalKeyboardKey, VoidCallback> _keyCallbacks;
 
@@ -22,13 +23,13 @@ class Input extends Component with KeyboardHandler, HasGameReference {
   void update(double dt) {
     _leftInput = lerpDouble(
       _leftInput,
-      _leftPressed ? 1.5 : 0,
+      (_leftPressed && active) ? 1.5 : 0,
       _sensitivity * dt,
     )!;
 
     _rightInput = lerpDouble(
       _rightInput,
-      _rightPressed ? 1.5 : 0,
+      (_rightPressed && active) ? 1.5 : 0,
       _sensitivity * dt,
     )!;
 
@@ -43,7 +44,7 @@ class Input extends Component with KeyboardHandler, HasGameReference {
       _rightPressed = keysPressed.contains(LogicalKeyboardKey.keyD) ||
           keysPressed.contains(LogicalKeyboardKey.arrowRight);
 
-      if (event is RawKeyDownEvent && event.repeat == false) {
+      if (active && event is RawKeyDownEvent && event.repeat == false) {
         for (final entry in _keyCallbacks.entries) {
           if (entry.key == event.logicalKey) {
             entry.value.call();
