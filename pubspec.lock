@@ -77,10 +77,10 @@ packages:
     dependency: "direct main"
     description:
       name: flame
-      sha256: "04c2ee1e01d6baf44f0273402ae0b6494669217bdd24cc8d38832750e7c25e75"
+      sha256: aa5aec029f5037e07b44b84df3f495ce159d078b528555470148582581e4915c
       url: "https://pub.dev"
     source: hosted
-    version: "1.13.0"
+    version: "1.13.1"
   flame_tiled:
     dependency: "direct main"
     description:
