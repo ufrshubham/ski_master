@@ -9,6 +9,7 @@ import 'package:flame_tiled/flame_tiled.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:ski_master/game/actors/snowman.dart';
+import 'package:ski_master/game/hud.dart';
 import 'package:ski_master/game/input.dart';
 import 'package:ski_master/game/actors/player.dart';
 
@@ -44,6 +45,10 @@ class Gameplay extends Component with HasGameReference {
   late final Player _player;
   late final Vector2 _lastSafePosition;
   late final RectangleComponent _fader;
+  late final Hud _hud;
+  late final SpriteSheet _spriteSheet;
+
+  int _nSnowmanCollected = 0;
 
   int _nTrailTriggers = 0;
   bool get _isOffTrail => _nTrailTriggers == 0;
@@ -56,6 +61,10 @@ class Gameplay extends Component with HasGameReference {
       'Level$currentLevel.tmx',
       Vector2.all(16),
     );
+
+    final tiles = game.images.fromCache('../images/tilemap_packed.png');
+    _spriteSheet = SpriteSheet(image: tiles, srcSize: Vector2.all(16));
+
     await _setupWorldAndCamera(map);
     await _handleSpawnPoints(map);
     await _handleTriggers(map);
@@ -64,8 +73,12 @@ class Gameplay extends Component with HasGameReference {
       size: _camera.viewport.virtualSize,
       paint: Paint()..color = game.backgroundColor(),
       children: [OpacityEffect.fadeOut(LinearEffectController(1.5))],
+      priority: 1,
     );
-    _camera.viewport.add(_fader);
+
+    _hud = Hud(snowmanSprite: _spriteSheet.getSprite(5, 9));
+
+    await _camera.viewport.addAll([_fader, _hud]);
   }
 
   @override
@@ -104,9 +117,6 @@ class Gameplay extends Component with HasGameReference {
   }
 
   Future<void> _handleSpawnPoints(TiledComponent map) async {
-    final tiles = game.images.fromCache('../images/tilemap_packed.png');
-    final spriteSheet = SpriteSheet(image: tiles, srcSize: Vector2.all(16));
-
     final spawnPointLayer = map.tileMap.getLayer<ObjectGroup>('SpawnPoint');
     final objects = spawnPointLayer?.objects;
 
@@ -116,7 +126,7 @@ class Gameplay extends Component with HasGameReference {
           case 'Player':
             _player = Player(
               position: Vector2(object.x, object.y),
-              sprite: spriteSheet.getSprite(5, 10),
+              sprite: _spriteSheet.getSprite(5, 10),
             );
             await _world.add(_player);
             _camera.follow(_player);
@@ -125,7 +135,8 @@ class Gameplay extends Component with HasGameReference {
           case 'Snowman':
             final snowman = Snowman(
               position: Vector2(object.x, object.y),
-              sprite: spriteSheet.getSprite(5, 9),
+              sprite: _spriteSheet.getSprite(5, 9),
+              onCollected: _onSnowmanCollected,
             );
             await _world.add(snowman);
             break;
@@ -252,6 +263,11 @@ class Gameplay extends Component with HasGameReference {
     input.active = false;
     _levelCompleted = true;
     onLevelCompleted.call();
+  }
+
+  void _onSnowmanCollected() {
+    ++_nSnowmanCollected;
+    _hud.updateSnowmanCount(_nSnowmanCollected);
   }
 
   void _resetPlayer() {

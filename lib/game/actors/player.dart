@@ -6,15 +6,10 @@ import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
 import 'package:flutter/widgets.dart';
-import 'package:ski_master/game/actors/snowman.dart';
 import 'package:ski_master/game/routes/gameplay.dart';
 
 class Player extends PositionComponent
-    with
-        HasGameReference,
-        HasAncestor<Gameplay>,
-        CollisionCallbacks,
-        HasTimeScale {
+    with HasGameReference, HasAncestor<Gameplay>, HasTimeScale {
   Player({super.position, required Sprite sprite})
       : _body = SpriteComponent(sprite: sprite, anchor: Anchor.center);
 
@@ -43,16 +38,6 @@ class Player extends PositionComponent
 
     angle = _moveDirection.screenAngle() + pi;
     position.addScaled(_moveDirection, _speed * dt);
-  }
-
-  @override
-  void onCollisionStart(
-      Set<Vector2> intersectionPoints, PositionComponent other) {
-    super.onCollisionStart(intersectionPoints, other);
-
-    if (other is Snowman) {
-      other.collect();
-    }
   }
 
   void resetTo(Vector2 resetPosition) {
