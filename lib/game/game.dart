@@ -46,13 +46,6 @@ class SkiMasterGame extends FlameGame
         onExitPressed: _exitToMainMenu,
       ),
     ),
-    LevelComplete.id: OverlayRoute(
-      (context, game) => LevelComplete(
-        onNextPressed: _startNextLevel,
-        onRetryPressed: _restartLevel,
-        onExitPressed: _exitToMainMenu,
-      ),
-    ),
     RetryMenu.id: OverlayRoute(
       (context, game) => RetryMenu(
         onRetryPressed: _restartLevel,
@@ -61,9 +54,21 @@ class SkiMasterGame extends FlameGame
     ),
   };
 
+  late final _routeFactories = <String, Route Function(String)>{
+    LevelComplete.id: (argument) => OverlayRoute(
+          (context, game) => LevelComplete(
+            nStars: int.parse(argument),
+            onNextPressed: _startNextLevel,
+            onRetryPressed: _restartLevel,
+            onExitPressed: _exitToMainMenu,
+          ),
+        ),
+  };
+
   late final _router = RouterComponent(
     initialRoute: MainMenu.id,
     routes: _routes,
+    routeFactories: _routeFactories,
   );
 
   @override
@@ -130,8 +135,8 @@ class SkiMasterGame extends FlameGame
     _router.pushReplacementNamed(MainMenu.id);
   }
 
-  void _showLevelCompleteMenu() {
-    _router.pushNamed(LevelComplete.id);
+  void _showLevelCompleteMenu(int nStars) {
+    _router.pushNamed('${LevelComplete.id}/$nStars');
   }
 
   void _showRetryMenu() {

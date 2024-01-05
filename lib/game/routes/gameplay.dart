@@ -27,13 +27,13 @@ class Gameplay extends Component with HasGameReference {
 
   final int currentLevel;
   final VoidCallback onPausePressed;
-  final VoidCallback onLevelCompleted;
+  final ValueChanged<int> onLevelCompleted;
   final VoidCallback onGameOver;
 
   late final input = Input(
     keyCallbacks: {
       LogicalKeyboardKey.keyP: onPausePressed,
-      LogicalKeyboardKey.keyC: onLevelCompleted,
+      LogicalKeyboardKey.keyC: () => onLevelCompleted.call(3),
       LogicalKeyboardKey.keyO: onGameOver,
     },
   );
@@ -50,6 +50,10 @@ class Gameplay extends Component with HasGameReference {
 
   int _nSnowmanCollected = 0;
 
+  late int _star1;
+  late int _star2;
+  late int _star3;
+
   int _nTrailTriggers = 0;
   bool get _isOffTrail => _nTrailTriggers == 0;
 
@@ -64,6 +68,10 @@ class Gameplay extends Component with HasGameReference {
 
     final tiles = game.images.fromCache('../images/tilemap_packed.png');
     _spriteSheet = SpriteSheet(image: tiles, srcSize: Vector2.all(16));
+
+    _star1 = map.tileMap.map.properties.getValue<int>('Star1')!;
+    _star2 = map.tileMap.map.properties.getValue<int>('Star2')!;
+    _star3 = map.tileMap.map.properties.getValue<int>('Star3')!;
 
     await _setupWorldAndCamera(map);
     await _handleSpawnPoints(map);
@@ -262,7 +270,16 @@ class Gameplay extends Component with HasGameReference {
     _fader.add(OpacityEffect.fadeIn(LinearEffectController(1.5)));
     input.active = false;
     _levelCompleted = true;
-    onLevelCompleted.call();
+
+    if (_nSnowmanCollected >= _star3) {
+      onLevelCompleted.call(3);
+    } else if (_nSnowmanCollected >= _star2) {
+      onLevelCompleted.call(2);
+    } else if (_nSnowmanCollected >= _star1) {
+      onLevelCompleted.call(1);
+    } else {
+      onLevelCompleted.call(0);
+    }
   }
 
   void _onSnowmanCollected() {

@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="30" height="144" tilewidth="16" tileheight="16" infinite="0" nextlayerid="5" nextobjectid="72">
+ <properties>
+  <property name="Star1" type="int" value="8"/>
+  <property name="Star2" type="int" value="10"/>
+  <property name="Star3" type="int" value="12"/>
+ </properties>
  <tileset firstgid="1" name="tilemap_packed" tilewidth="16" tileheight="16" tilecount="132" columns="12" objectalignment="center">
   <image source="../images/tilemap_packed.png" width="192" height="176"/>
  </tileset>

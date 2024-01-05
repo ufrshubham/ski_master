@@ -3,6 +3,11 @@
  <editorsettings>
   <export target="../assets/tiles/Level1.tmx" format="tmx"/>
  </editorsettings>
+ <properties>
+  <property name="Star1" type="int" value="2"/>
+  <property name="Star2" type="int" value="3"/>
+  <property name="Star3" type="int" value="4"/>
+ </properties>
  <tileset firstgid="1" source="tilemap_packed.tsx"/>
  <layer id="1" name="Path" width="20" height="64" locked="1">
   <data encoding="csv">
