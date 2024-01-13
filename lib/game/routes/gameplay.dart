@@ -38,7 +38,7 @@ class Gameplay extends Component with HasGameReference {
     },
   );
 
-  late final _resetTimer = Timer(1.5, autoStart: false, onTick: _resetPlayer);
+  late final _resetTimer = Timer(1, autoStart: false, onTick: _resetPlayer);
 
   late final World _world;
   late final CameraComponent _camera;
@@ -49,6 +49,7 @@ class Gameplay extends Component with HasGameReference {
   late final SpriteSheet _spriteSheet;
 
   int _nSnowmanCollected = 0;
+  int _nLives = 3;
 
   late int _star1;
   late int _star2;
@@ -58,6 +59,7 @@ class Gameplay extends Component with HasGameReference {
   bool get _isOffTrail => _nTrailTriggers == 0;
 
   bool _levelCompleted = false;
+  bool _gameOver = false;
 
   @override
   Future<void> onLoad() async {
@@ -84,14 +86,17 @@ class Gameplay extends Component with HasGameReference {
       priority: 1,
     );
 
-    _hud = Hud(snowmanSprite: _spriteSheet.getSprite(5, 9));
+    _hud = Hud(
+      playerSprite: _spriteSheet.getSprite(5, 10),
+      snowmanSprite: _spriteSheet.getSprite(5, 9),
+    );
 
     await _camera.viewport.addAll([_fader, _hud]);
   }
 
   @override
   void update(double dt) {
-    if (_levelCompleted) {
+    if (_levelCompleted || _gameOver) {
       _player.timeScale = lerpDouble(
         _player.timeScale,
         0,
@@ -288,6 +293,15 @@ class Gameplay extends Component with HasGameReference {
   }
 
   void _resetPlayer() {
-    _player.resetTo(_lastSafePosition);
+    --_nLives;
+    _hud.updateLifeCount(_nLives);
+
+    if (_nLives > 0) {
+      _player.resetTo(_lastSafePosition);
+    } else {
+      _gameOver = true;
+      _fader.add(OpacityEffect.fadeIn(LinearEffectController(1.5)));
+      onGameOver.call();
+    }
   }
 }
