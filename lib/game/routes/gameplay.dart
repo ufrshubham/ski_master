@@ -39,6 +39,10 @@ class Gameplay extends Component with HasGameReference {
   );
 
   late final _resetTimer = Timer(1, autoStart: false, onTick: _resetPlayer);
+  late final _cameraShake = MoveEffect.by(
+    Vector2(0, 3),
+    InfiniteEffectController(ZigzagEffectController(period: 0.2)),
+  );
 
   late final World _world;
   late final CameraComponent _camera;
@@ -92,6 +96,8 @@ class Gameplay extends Component with HasGameReference {
     );
 
     await _camera.viewport.addAll([_fader, _hud]);
+    await _camera.viewfinder.add(_cameraShake);
+    _cameraShake.pause();
   }
 
   @override
@@ -109,9 +115,17 @@ class Gameplay extends Component with HasGameReference {
         if (!_resetTimer.isRunning()) {
           _resetTimer.start();
         }
+
+        if (_cameraShake.isPaused) {
+          _cameraShake.resume();
+        }
       } else {
         if (_resetTimer.isRunning()) {
           _resetTimer.stop();
+        }
+
+        if (!_cameraShake.isPaused) {
+          _cameraShake.pause();
         }
       }
     }
@@ -140,6 +154,7 @@ class Gameplay extends Component with HasGameReference {
             _player = Player(
               position: Vector2(object.x, object.y),
               sprite: _spriteSheet.getSprite(5, 10),
+              priority: 1,
             );
             await _world.add(_player);
             _camera.follow(_player);
