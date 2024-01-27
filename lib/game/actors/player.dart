@@ -6,11 +6,13 @@ import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
 import 'package:flame/particles.dart';
+import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/widgets.dart';
+import 'package:ski_master/game/game.dart';
 import 'package:ski_master/game/routes/gameplay.dart';
 
 class Player extends PositionComponent
-    with HasGameReference, HasAncestor<Gameplay>, HasTimeScale {
+    with HasGameReference<SkiMasterGame>, HasAncestor<Gameplay>, HasTimeScale {
   Player({super.position, required Sprite sprite, super.priority})
       : _body = SpriteComponent(sprite: sprite, anchor: Anchor.center);
 
@@ -68,11 +70,17 @@ class Player extends PositionComponent
   }
 
   void resetTo(Vector2 resetPosition) {
+    if (game.sfxValueNotifier.value) {
+      FlameAudio.play(SkiMasterGame.hurtSfx);
+    }
     position.setFrom(resetPosition);
     _speed *= 0.5;
   }
 
   double jump() {
+    if (game.sfxValueNotifier.value) {
+      FlameAudio.play(SkiMasterGame.jumpSfx);
+    }
     _isOnGround = false;
     final jumpFactor = _speed / _maxSpeed;
     final jumpScale = lerpDouble(1, 1.2, jumpFactor)!;

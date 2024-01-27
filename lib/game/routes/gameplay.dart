@@ -5,15 +5,17 @@ import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
 import 'package:flame/sprite.dart';
+import 'package:flame_audio/flame_audio.dart';
 import 'package:flame_tiled/flame_tiled.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:ski_master/game/actors/snowman.dart';
+import 'package:ski_master/game/game.dart';
 import 'package:ski_master/game/hud.dart';
 import 'package:ski_master/game/input.dart';
 import 'package:ski_master/game/actors/player.dart';
 
-class Gameplay extends Component with HasGameReference {
+class Gameplay extends Component with HasGameReference<SkiMasterGame> {
   Gameplay(
     this.currentLevel, {
     super.key,
@@ -24,6 +26,9 @@ class Gameplay extends Component with HasGameReference {
 
   static const id = 'Gameplay';
   static const _timeScaleRate = 1;
+  static const _bgmFadeRate = 1;
+  static const _bgmMinVol = 0;
+  static const _bgmMaxVol = 0.6;
 
   final int currentLevel;
   final VoidCallback onPausePressed;
@@ -65,8 +70,14 @@ class Gameplay extends Component with HasGameReference {
   bool _levelCompleted = false;
   bool _gameOver = false;
 
+  AudioPlayer? _bgmPlayer;
+
   @override
   Future<void> onLoad() async {
+    if (game.musicValueNotifier.value) {
+      _bgmPlayer = await FlameAudio.loopLongAudio(SkiMasterGame.bgm, volume: 0);
+    }
+
     final map = await TiledComponent.load(
       'Level$currentLevel.tmx',
       Vector2.all(16),
@@ -129,6 +140,28 @@ class Gameplay extends Component with HasGameReference {
         }
       }
     }
+
+    if (_bgmPlayer != null) {
+      if (_levelCompleted) {
+        if (_bgmPlayer!.volume > _bgmMinVol) {
+          _bgmPlayer!.setVolume(
+            lerpDouble(_bgmPlayer!.volume, _bgmMinVol, _bgmFadeRate * dt)!,
+          );
+        }
+      } else {
+        if (_bgmPlayer!.volume < _bgmMaxVol) {
+          _bgmPlayer!.setVolume(
+            lerpDouble(_bgmPlayer!.volume, _bgmMaxVol, _bgmFadeRate * dt)!,
+          );
+        }
+      }
+    }
+  }
+
+  @override
+  void onRemove() {
+    _bgmPlayer?.dispose();
+    super.onRemove();
   }
 
   Future<void> _setupWorldAndCamera(TiledComponent map) async {
