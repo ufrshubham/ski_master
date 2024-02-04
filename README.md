@@ -32,7 +32,7 @@ Some assets provided in this repo are not owned by me. For details about their o
 
 ### Art Credits
 
-- [tilemap_packed.png](assets/images/tilemap_packed.png) by [Kenney](https://kenney.nl/)
+- [tilemap_packed.png](assets/images/tilemap_packed.png) and [pause.png](assets/images/pause.png) by [Kenney](https://kenney.nl/)
 
 ### Audio Credits
 
