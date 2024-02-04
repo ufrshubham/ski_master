@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flame/components.dart';
 import 'package:flutter/services.dart';
+import 'package:ski_master/game/game.dart';
 
 class Input extends Component with KeyboardHandler, HasGameReference {
   Input({Map<LogicalKeyboardKey, VoidCallback>? keyCallbacks})
@@ -12,7 +13,9 @@ class Input extends Component with KeyboardHandler, HasGameReference {
 
   var _leftInput = 0.0;
   var _rightInput = 0.0;
-  static const _sensitivity = 2.0;
+
+  final maxHAxis = 1.5;
+  final sensitivity = 2.0;
 
   var hAxis = 0.0;
   bool active = false;
@@ -21,24 +24,26 @@ class Input extends Component with KeyboardHandler, HasGameReference {
 
   @override
   void update(double dt) {
-    _leftInput = lerpDouble(
-      _leftInput,
-      (_leftPressed && active) ? 1.5 : 0,
-      _sensitivity * dt,
-    )!;
+    if (!SkiMasterGame.isMobile) {
+      _leftInput = lerpDouble(
+        _leftInput,
+        (_leftPressed && active) ? maxHAxis : 0,
+        sensitivity * dt,
+      )!;
 
-    _rightInput = lerpDouble(
-      _rightInput,
-      (_rightPressed && active) ? 1.5 : 0,
-      _sensitivity * dt,
-    )!;
+      _rightInput = lerpDouble(
+        _rightInput,
+        (_rightPressed && active) ? maxHAxis : 0,
+        sensitivity * dt,
+      )!;
 
-    hAxis = _rightInput - _leftInput;
+      hAxis = _rightInput - _leftInput;
+    }
   }
 
   @override
   bool onKeyEvent(RawKeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
-    if (game.paused == false) {
+    if (!SkiMasterGame.isMobile && game.paused == false) {
       _leftPressed = keysPressed.contains(LogicalKeyboardKey.keyA) ||
           keysPressed.contains(LogicalKeyboardKey.arrowLeft);
       _rightPressed = keysPressed.contains(LogicalKeyboardKey.keyD) ||

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
+import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/widgets.dart' hide Route, OverlayRoute;
@@ -22,6 +23,8 @@ class SkiMasterGame extends FlameGame
 
   final musicValueNotifier = ValueNotifier(true);
   final sfxValueNotifier = ValueNotifier(true);
+
+  static const isMobile = bool.fromEnvironment('MOBILE_BUILD');
 
   late final _routes = <String, Route>{
     MainMenu.id: OverlayRoute(
@@ -82,6 +85,8 @@ class SkiMasterGame extends FlameGame
 
   @override
   Future<void> onLoad() async {
+    await Flame.device.setPortrait();
+    await Flame.device.fullScreen();
     await FlameAudio.audioCache.loadAll([bgm, jumpSfx, collectSfx, hurtSfx]);
     await add(_router);
   }

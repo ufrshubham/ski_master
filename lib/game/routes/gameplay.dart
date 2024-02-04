@@ -104,6 +104,8 @@ class Gameplay extends Component with HasGameReference<SkiMasterGame> {
     _hud = Hud(
       playerSprite: _spriteSheet.getSprite(5, 10),
       snowmanSprite: _spriteSheet.getSprite(5, 9),
+      input: SkiMasterGame.isMobile ? input : null,
+      onPausePressed: SkiMasterGame.isMobile ? onPausePressed : null,
     );
 
     await _camera.viewport.addAll([_fader, _hud]);
@@ -168,9 +170,13 @@ class Gameplay extends Component with HasGameReference<SkiMasterGame> {
     _world = World(children: [map, input]);
     await add(_world);
 
+    final aspectRatio = MediaQuery.of(game.buildContext!).size.aspectRatio;
+    const height = SkiMasterGame.isMobile ? 200.0 : 180.0;
+    final width = SkiMasterGame.isMobile ? height * aspectRatio : 320.0;
+
     _camera = CameraComponent.withFixedResolution(
-      width: 320,
-      height: 180,
+      width: width,
+      height: height,
       world: _world,
     );
     await add(_camera);
