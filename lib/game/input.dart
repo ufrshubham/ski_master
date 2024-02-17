@@ -42,14 +42,14 @@ class Input extends Component with KeyboardHandler, HasGameReference {
   }
 
   @override
-  bool onKeyEvent(RawKeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
+  bool onKeyEvent(KeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
     if (!SkiMasterGame.isMobile && game.paused == false) {
       _leftPressed = keysPressed.contains(LogicalKeyboardKey.keyA) ||
           keysPressed.contains(LogicalKeyboardKey.arrowLeft);
       _rightPressed = keysPressed.contains(LogicalKeyboardKey.keyD) ||
           keysPressed.contains(LogicalKeyboardKey.arrowRight);
 
-      if (active && event is RawKeyDownEvent && event.repeat == false) {
+      if (active && event is KeyDownEvent) {
         for (final entry in _keyCallbacks.entries) {
           if (entry.key == event.logicalKey) {
             entry.value.call();

@@ -9,9 +9,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flame: 1.14.0
-  flame_tiled: 1.18.3
-  flame_audio: 2.1.7
+  flame: 1.16.0
+  flame_tiled: 1.19.0
+  flame_audio: 2.10.0
 
 dev_dependencies:
   flutter_test:
