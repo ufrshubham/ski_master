@@ -86,12 +86,12 @@ class Hud extends PositionComponent with ParentIsA<Viewport>, HasGameReference {
         position: parent.virtualSize * 0.5,
         knob: CircleComponent(
           radius: 10,
-          paint: Paint()..color = Colors.green.withOpacity(0.08),
+          paint: Paint()..color = Colors.green.withValues(alpha: 0.08),
         ),
         background: CircleComponent(
           radius: 20,
           paint: Paint()
-            ..color = Colors.black.withOpacity(0.05)
+            ..color = Colors.black.withValues(alpha: 0.05)
             ..style = PaintingStyle.stroke
             ..strokeWidth = 4,
         ),
