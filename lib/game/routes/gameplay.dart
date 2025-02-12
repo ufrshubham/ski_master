@@ -1,12 +1,14 @@
 import 'dart:async';
 import 'dart:ui';
 
+import 'package:flame/camera.dart';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
 import 'package:flame/sprite.dart';
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flame_tiled/flame_tiled.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:ski_master/game/actors/snowman.dart';
@@ -51,6 +53,7 @@ class Gameplay extends Component with HasGameReference<SkiMasterGame> {
 
   late final World _world;
   late final CameraComponent _camera;
+  late final CameraComponent _debugCamera;
   late final Player _player;
   late final Vector2 _lastSafePosition;
   late final RectangleComponent _fader;
@@ -180,6 +183,19 @@ class Gameplay extends Component with HasGameReference<SkiMasterGame> {
       world: _world,
     );
     await add(_camera);
+
+    if (kDebugMode) {
+      _debugCamera = CameraComponent(
+        viewport: FixedSizeViewport(width/4, height),
+        world: _world,
+      );
+
+      _debugCamera.viewfinder.visibleGameSize = Vector2(width, height * 2);
+
+      _debugCamera.viewport.anchor = Anchor.topLeft;
+      _debugCamera.viewfinder.anchor = Anchor.center;
+      await _camera.viewport.add(_debugCamera);
+    }
   }
 
   Future<void> _handleSpawnPoints(TiledComponent map) async {
@@ -197,6 +213,9 @@ class Gameplay extends Component with HasGameReference<SkiMasterGame> {
             );
             await _world.add(_player);
             _camera.follow(_player);
+            if (kDebugMode) {
+              _debugCamera.follow(_player);
+            }
             _lastSafePosition = Vector2(object.x, object.y);
             break;
           case 'Snowman':
