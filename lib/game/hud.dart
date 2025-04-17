@@ -16,16 +16,16 @@ class Hud extends PositionComponent with ParentIsA<Viewport>, HasGameReference {
     required Sprite snowmanSprite,
     this.input,
     this.onPausePressed,
-  })  : _player = SpriteComponent(
-          sprite: playerSprite,
-          anchor: Anchor.center,
-          scale: Vector2.all(SkiMasterGame.isMobile ? 0.6 : 1.0),
-        ),
-        _snowman = SpriteComponent(
-          sprite: snowmanSprite,
-          anchor: Anchor.center,
-          scale: Vector2.all(SkiMasterGame.isMobile ? 0.6 : 1.0),
-        );
+  }) : _player = SpriteComponent(
+         sprite: playerSprite,
+         anchor: Anchor.center,
+         scale: Vector2.all(SkiMasterGame.isMobile ? 0.6 : 1.0),
+       ),
+       _snowman = SpriteComponent(
+         sprite: snowmanSprite,
+         anchor: Anchor.center,
+         scale: Vector2.all(SkiMasterGame.isMobile ? 0.6 : 1.0),
+       );
 
   final _life = TextComponent(
     text: 'x3',
@@ -63,20 +63,11 @@ class Hud extends PositionComponent with ParentIsA<Viewport>, HasGameReference {
       SkiMasterGame.isMobile ? 10 : parent.virtualSize.y - 20,
     );
 
-    _life.position.setValues(
-      _player.position.x + 8,
-      _player.position.y,
-    );
+    _life.position.setValues(_player.position.x + 8, _player.position.y);
 
-    _snowman.position.setValues(
-      parent.virtualSize.x - 35,
-      _player.y,
-    );
+    _snowman.position.setValues(parent.virtualSize.x - 35, _player.y);
 
-    _score.position.setValues(
-      _snowman.position.x + 8,
-      _snowman.position.y,
-    );
+    _score.position.setValues(_snowman.position.x + 8, _snowman.position.y);
 
     await addAll([_player, _life, _snowman, _score]);
 
@@ -90,10 +81,11 @@ class Hud extends PositionComponent with ParentIsA<Viewport>, HasGameReference {
         ),
         background: CircleComponent(
           radius: 20,
-          paint: Paint()
-            ..color = Colors.black.withValues(alpha: 0.05)
-            ..style = PaintingStyle.stroke
-            ..strokeWidth = 4,
+          paint:
+              Paint()
+                ..color = Colors.black.withValues(alpha: 0.05)
+                ..style = PaintingStyle.stroke
+                ..strokeWidth = 4,
         ),
       );
 
@@ -117,11 +109,14 @@ class Hud extends PositionComponent with ParentIsA<Viewport>, HasGameReference {
   @override
   void update(double dt) {
     if (input?.active ?? false) {
-      input?.hAxis = lerpDouble(
-        input!.hAxis,
-        _joystick!.isDragged ? _joystick!.relativeDelta.x * input!.maxHAxis : 0,
-        input!.sensitivity * dt,
-      )!;
+      input?.hAxis =
+          lerpDouble(
+            input!.hAxis,
+            _joystick!.isDragged
+                ? _joystick!.relativeDelta.x * input!.maxHAxis
+                : 0,
+            input!.sensitivity * dt,
+          )!;
     }
   }
 
@@ -138,10 +133,7 @@ class Hud extends PositionComponent with ParentIsA<Viewport>, HasGameReference {
     _score.add(
       ScaleEffect.by(
         Vector2.all(1.5),
-        EffectController(
-          duration: 0.1,
-          alternate: true,
-        ),
+        EffectController(duration: 0.1, alternate: true),
       ),
     );
   }
@@ -159,10 +151,7 @@ class Hud extends PositionComponent with ParentIsA<Viewport>, HasGameReference {
     _life.add(
       ScaleEffect.by(
         Vector2.all(1.5),
-        EffectController(
-          duration: 0.1,
-          alternate: true,
-        ),
+        EffectController(duration: 0.1, alternate: true),
       ),
     );
   }

@@ -6,7 +6,7 @@ import 'package:ski_master/game/game.dart';
 
 class Input extends Component with KeyboardHandler, HasGameReference {
   Input({Map<LogicalKeyboardKey, VoidCallback>? keyCallbacks})
-      : _keyCallbacks = keyCallbacks ?? <LogicalKeyboardKey, VoidCallback>{};
+    : _keyCallbacks = keyCallbacks ?? <LogicalKeyboardKey, VoidCallback>{};
 
   bool _leftPressed = false;
   bool _rightPressed = false;
@@ -25,17 +25,19 @@ class Input extends Component with KeyboardHandler, HasGameReference {
   @override
   void update(double dt) {
     if (!SkiMasterGame.isMobile) {
-      _leftInput = lerpDouble(
-        _leftInput,
-        (_leftPressed && active) ? maxHAxis : 0,
-        sensitivity * dt,
-      )!;
+      _leftInput =
+          lerpDouble(
+            _leftInput,
+            (_leftPressed && active) ? maxHAxis : 0,
+            sensitivity * dt,
+          )!;
 
-      _rightInput = lerpDouble(
-        _rightInput,
-        (_rightPressed && active) ? maxHAxis : 0,
-        sensitivity * dt,
-      )!;
+      _rightInput =
+          lerpDouble(
+            _rightInput,
+            (_rightPressed && active) ? maxHAxis : 0,
+            sensitivity * dt,
+          )!;
 
       hAxis = _rightInput - _leftInput;
     }
@@ -44,9 +46,11 @@ class Input extends Component with KeyboardHandler, HasGameReference {
   @override
   bool onKeyEvent(KeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
     if (!SkiMasterGame.isMobile && game.paused == false) {
-      _leftPressed = keysPressed.contains(LogicalKeyboardKey.keyA) ||
+      _leftPressed =
+          keysPressed.contains(LogicalKeyboardKey.keyA) ||
           keysPressed.contains(LogicalKeyboardKey.arrowLeft);
-      _rightPressed = keysPressed.contains(LogicalKeyboardKey.keyD) ||
+      _rightPressed =
+          keysPressed.contains(LogicalKeyboardKey.keyD) ||
           keysPressed.contains(LogicalKeyboardKey.arrowRight);
 
       if (active && event is KeyDownEvent) {

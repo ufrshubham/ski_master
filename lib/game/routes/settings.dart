@@ -27,10 +27,7 @@ class Settings extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text(
-              'Settings',
-              style: TextStyle(fontSize: 30),
-            ),
+            const Text('Settings', style: TextStyle(fontSize: 30)),
             const SizedBox(height: 15),
             SizedBox(
               width: 200,
@@ -65,7 +62,7 @@ class Settings extends StatelessWidget {
             IconButton(
               onPressed: onBackPressed,
               icon: const Icon(Icons.arrow_back_rounded),
-            )
+            ),
           ],
         ),
       ),

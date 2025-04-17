@@ -2,11 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ski_master/game/game.dart';
 
 class LevelSelection extends StatelessWidget {
-  const LevelSelection({
-    super.key,
-    this.onLevelSelected,
-    this.onBackPressed,
-  });
+  const LevelSelection({super.key, this.onLevelSelected, this.onBackPressed});
 
   static const id = 'LevelSelection';
 
@@ -20,10 +16,7 @@ class LevelSelection extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text(
-              'Level Selection',
-              style: TextStyle(fontSize: 30),
-            ),
+            const Text('Level Selection', style: TextStyle(fontSize: 30)),
             const SizedBox(height: 15),
             Flexible(
               child: GridView.builder(
@@ -48,7 +41,7 @@ class LevelSelection extends StatelessWidget {
             IconButton(
               onPressed: onBackPressed,
               icon: const Icon(Icons.arrow_back_rounded),
-            )
+            ),
           ],
         ),
       ),

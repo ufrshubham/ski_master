@@ -25,10 +25,7 @@ class LevelComplete extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text(
-              'Level Completed',
-              style: TextStyle(fontSize: 30),
-            ),
+            const Text('Level Completed', style: TextStyle(fontSize: 30)),
             const SizedBox(height: 15),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,

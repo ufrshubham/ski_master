@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 
 class RetryMenu extends StatelessWidget {
-  const RetryMenu({
-    super.key,
-    this.onRetryPressed,
-    this.onExitPressed,
-  });
+  const RetryMenu({super.key, this.onRetryPressed, this.onExitPressed});
 
   static const id = 'RetryMenu';
 
@@ -20,10 +16,7 @@ class RetryMenu extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text(
-              'Game Over',
-              style: TextStyle(fontSize: 30),
-            ),
+            const Text('Game Over', style: TextStyle(fontSize: 30)),
             const SizedBox(height: 15),
             SizedBox(
               width: 150,

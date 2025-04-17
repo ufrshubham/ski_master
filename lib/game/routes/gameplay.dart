@@ -116,11 +116,8 @@ class Gameplay extends Component with HasGameReference<SkiMasterGame> {
   @override
   void update(double dt) {
     if (_levelCompleted || _gameOver) {
-      _player.timeScale = lerpDouble(
-        _player.timeScale,
-        0,
-        _timeScaleRate * dt,
-      )!;
+      _player.timeScale =
+          lerpDouble(_player.timeScale, 0, _timeScaleRate * dt)!;
     } else {
       if (_isOffTrail && input.active) {
         _resetTimer.update(dt);

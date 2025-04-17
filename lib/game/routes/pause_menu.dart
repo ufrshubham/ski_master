@@ -22,10 +22,7 @@ class PauseMenu extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text(
-              'Paused',
-              style: TextStyle(fontSize: 30),
-            ),
+            const Text('Paused', style: TextStyle(fontSize: 30)),
             const SizedBox(height: 15),
             SizedBox(
               width: 150,
