@@ -14,7 +14,7 @@ import 'package:ski_master/game/routes/gameplay.dart';
 class Player extends PositionComponent
     with HasGameReference<SkiMasterGame>, HasAncestor<Gameplay>, HasTimeScale {
   Player({super.position, required Sprite sprite, super.priority})
-    : _body = SpriteComponent(sprite: sprite, anchor: Anchor.center);
+      : _body = SpriteComponent(sprite: sprite, anchor: Anchor.center);
 
   final SpriteComponent _body;
   final _moveDirection = Vector2(0, 1);

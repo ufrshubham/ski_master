@@ -12,7 +12,7 @@ import 'package:ski_master/game/game.dart';
 class Snowman extends PositionComponent
     with CollisionCallbacks, HasGameReference<SkiMasterGame> {
   Snowman({super.position, required Sprite sprite, this.onCollected})
-    : _body = SpriteComponent(sprite: sprite, anchor: Anchor.center);
+      : _body = SpriteComponent(sprite: sprite, anchor: Anchor.center);
 
   final SpriteComponent _body;
   final VoidCallback? onCollected;

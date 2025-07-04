@@ -64,8 +64,7 @@ class SkiMasterGame extends FlameGame
   };
 
   late final _routeFactories = <String, Route Function(String)>{
-    LevelComplete.id:
-        (argument) => OverlayRoute(
+    LevelComplete.id: (argument) => OverlayRoute(
           (context, game) => LevelComplete(
             nStars: int.parse(argument),
             onNextPressed: _startNextLevel,
